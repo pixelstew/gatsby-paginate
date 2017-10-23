@@ -8,6 +8,10 @@
   "scripts": {
     "test": "mocha"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixelstew/gatsby-paginate"
+  },
   "author": "Rob Gilbert",
   "license": "ISC",
   "dependencies": {
