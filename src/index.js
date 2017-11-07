@@ -22,7 +22,7 @@ const isLastPage = (index, groups) =>
 const createPaginatedPages = (posts, createPage, template, post) => {
   posts.forEach((group, index, groups) => {
     return createPage({
-      path: buildPaginationRoute(getPageIndex(index, post)),
+      path: buildPaginationRoute(getPageIndex(index), post),
       component: template,
       context: {
         group,
