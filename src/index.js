@@ -28,7 +28,8 @@ const createPaginatedPages = (posts, createPage, template, post) => {
         group,
         first: isFirstPage(index),
         last: isLastPage(index, groups),
-        index: index + 1
+        index: index + 1,
+        prefix: post
       }
     });
   });
