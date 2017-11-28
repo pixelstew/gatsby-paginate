@@ -95,7 +95,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
 };
 ```
 
-Notice that `createPaginatedPages` is being passed an object. `edges` is the array of nodes that comes from the GraphQL query. `createPage` is simply the createPage function you get from `boundActionCreators`. `pageTemplate` is a template to use for the index page. And `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10. 
+Notice that `createPaginatedPages` is being passed an object. `edges` is the array of nodes that comes from the GraphQL query. `createPage` is simply the createPage function you get from `boundActionCreators`. `pageTemplate` is a template to use for the index page. And `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10.
 
 `createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pathContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
 
@@ -116,14 +116,13 @@ const NavLink = props => {
 };
 
 const IndexPage = ({ data, pathContext }) => {
-  const { group, index, first, last } = pathContext;
+  const { group, index, count, first, last } = pathContext;
   const previousUrl = index - 1 == 1 ? "" : (index - 1).toString();
   const nextUrl = (index + 1).toString();
 
   return (
     <div>
       <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
-
       {group.map(({ node }) => (
         <div key={node.id} className="blogListing">
           <div className="date">{node.frontmatter.date}</div>
@@ -136,6 +135,7 @@ const IndexPage = ({ data, pathContext }) => {
       <div className="previousLink">
         <NavLink test={first} url={previousUrl} text="Go to Previous Page" />
       </div>
+      <p>Page {index} of {count}</p>
       <div className="nextLink">
         <NavLink test={last} url={nextUrl} text="Go to Next Page" />
       </div>
@@ -153,6 +153,11 @@ export const pageQuery = graphql`
 `;
 ```
 
-Notice that the posts for this page are in an array passed to the template through `this.props.pathContext.group`. Index shows the current page you are on, first is whether this is the first page, last is whether this is the last page. 
+Notice that the posts for this page are in an array passed to the template through `this.props.pathContext.group`. The parameters of `pathContext` are:
 
-The query included is just to get info on the total number of posts on the site. 
+ * `index` shows the current page you are on.
+ * `count` shows the total number of pages.
+ * `first` is whether this is the first page.
+ * `last` is whether this is the last page.
+
+The `totalCount` query included illustrates how to get the total number of posts on the site, unlike `count` which displays the number of post groups.
