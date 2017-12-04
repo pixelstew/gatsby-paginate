@@ -12,20 +12,23 @@ const filterPages = (posts, pageLength) => {
 
 const getPageIndex = index => (index === 0 ? "" : index + 1);
 
-const buildPaginationRoute = (index, post) => `${post}/${index}`;
+const buildPaginationRoute = (index, pathPrefix) => {
+  return index > 1 ? `${pathPrefix}/${index}` : '/'
+}
 
 const isFirstPage = index => (index === 0 ? true : false);
 
 const isLastPage = (index, groups) =>
   index === groups.length - 1 ? true : false;
 
-const createPaginatedPages = (posts, createPage, template, post) => {
+const createPaginatedPages = (posts, createPage, template, pathPrefix) => {
   posts.forEach((group, index, groups) => {
     return createPage({
-      path: buildPaginationRoute(getPageIndex(index), post),
+      path: buildPaginationRoute(getPageIndex(index), pathPrefix),
       component: template,
       context: {
         group,
+        pathPrefix,
         first: isFirstPage(index),
         last: isLastPage(index, groups),
         index: index + 1
@@ -39,13 +42,13 @@ module.exports = ({
   createPage,
   pageTemplate,
   pageLength = 10,
-  paginatePost = ""
+  pathPrefix = ""
 }) => {
   const paginationTemplate = path.resolve(pageTemplate);
   createPaginatedPages(
     filterPages(edges, pageLength),
     createPage,
     paginationTemplate,
-    paginatePost
+    pathPrefix
   );
 };
