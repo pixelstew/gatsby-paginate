@@ -29,6 +29,7 @@ const createPaginatedPages = (posts, createPage, template, post) => {
         first: isFirstPage(index),
         last: isLastPage(index, groups),
         index: index + 1,
+        pageCount: groups.length
         prefix: post
       }
     });
