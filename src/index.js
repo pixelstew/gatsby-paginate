@@ -33,7 +33,6 @@ const createPaginatedPages = (posts, createPage, template, pathPrefix) => {
         last: isLastPage(index, groups),
         index: index + 1,
         pageCount: groups.length
-        prefix: post
       }
     });
   });
