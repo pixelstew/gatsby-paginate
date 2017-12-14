@@ -10,19 +10,22 @@ npm install gatsby-paginate --save
 
 ## Usage
 
-To create a paginated index of your blog posts, you need to do four things:
+* Require the package in your `gatsby-node.js` file.
+* Add a call to createPaginatedPages in `gatsby-node.js`.
 
-1. Require the package in your `gatsby-node.js` file.
-1. Add a call to createPaginatedPages in `gatsby-node.js`.
-1. Remove the `index.js` file from the pages directory.
-1. Create an `index.js` file in the templates directory and refer to it in the createPaginatedPages call
-
-### Require the package
-Add the following to the top of your `gatsby-node.js` file.
+Then add the following to the top of your `gatsby-node.js` file.
 
 ```javascript
-const createPaginatedPages = require('gatsby-paginate');
+const createPaginatedPages = require("gatsby-paginate");
 ```
+
+## Use case 1 - paginate list of posts on home page<a name="eg1"></a>
+
+To create a paginated index of your blog posts, you need to do four things:
+
+* Remove the `index.js` file from the pages directory.
+* Create an `index.js` file in the templates directory and refer to it in the createPaginatedPages call
+
 ### Call createPaginatedPages
 
 You probably already have something like this in your `gatsby-node.js` file to generate the pages for your blog:
@@ -78,7 +81,8 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
         edges: result.data.posts.edges,
         createPage: createPage,
         pageTemplate: "src/templates/index.js",
-        pageLength: 10
+        pageLength: 5, // This is optional and defaults to 10 if not used
+        pathPrefix: "" // This is optional and defaults to an empty sctring if not used
       });
       result.data.posts.edges.map(({ node }) => {
         createPage({
@@ -95,13 +99,53 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
 };
 ```
 
-Notice that `createPaginatedPages` is being passed an object. `edges` is the array of nodes that comes from the GraphQL query. `createPage` is simply the createPage function you get from `boundActionCreators`. `pageTemplate` is a template to use for the index page. And `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10. 
+Notice that `createPaginatedPages` is being passed an options object.
+
+1. `edges` is the array of nodes that comes from the GraphQL query.
+2. `createPage` is simply the `createPage` function you get from `boundActionCreators`.
+3. `pageTemplate` is a template to use for the index page. And
+4. `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10.
+5. `pathPrefix` is an optional parameter for passing the name of a path to add to the path generated in the `createPage`func. This is used in [use case 2](#eg2) below.
 
 `createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pathContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
 
-### Create the index template
+## Use case 2 - paginate a post or use pagination on a page other than index<a name="eg2"></a>
 
-After deleting `index.js` from the pages directory, create an `index.js` file in templates. Add something like the following code to your template:
+### Call createPaginatedPages in the same way as above but...
+
+This time pass in a `pathPrefix`
+
+```javascript
+createPaginatedPages({
+  edges: result.data.posts.edges,
+  createPage: createPage,
+  pageTemplate: "src/templates/your_cool_template.js",
+  pageLength: 5,
+  pathPrefix: "your_page_name"
+}}
+```
+
+Then...
+
+* Create a template in tha same way as above but this time
+* Add a `pathPrefix`
+
+In this instance a new set of pages will be created at the following path `your_site/your_page_name`
+Then a second paginated page of `your_site/your_page_name/2`
+
+**PLEASE NOTE: THE PATH PREFIX FUNCTIONALITY IS UNDER DEVELOPMENT AND MORE FLEXIBILITY WILL BE ADDED SOON**
+
+### Create the template
+
+This si a simple template which might be used in [use case 1](#eg1) above to replace the index of a blog with a paginated list of posts.
+
+The `pathContext` object which contains the following 5 keys is passed to the template;
+
+1. `group` - (arr) an array containing the number of edges/nodes specified in the `pageLength` option.
+1. `index` - (int) this is the index of the edge/node.
+1. `first` - (bool) **Soon to be deprecated - please calculate first using index and pageCount** - is this the first page?
+1. `last` - (bool) **Soon to be deprecated - please calculate last using index and pageCount** - is this the last page?
+1. `pageCount` - (int) the total count of items edges/nodes being paginated through
 
 ```javascript
 import React, { Component } from "react";
@@ -116,13 +160,13 @@ const NavLink = props => {
 };
 
 const IndexPage = ({ data, pathContext }) => {
-  const { group, index, first, last } = pathContext;
+  const { group, index, first, last, pageCount } = pathContext;
   const previousUrl = index - 1 == 1 ? "" : (index - 1).toString();
   const nextUrl = (index + 1).toString();
 
   return (
     <div>
-      <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
+      <h4>{pageCount} Posts</h4>
 
       {group.map(({ node }) => (
         <div key={node.id} className="blogListing">
@@ -143,16 +187,4 @@ const IndexPage = ({ data, pathContext }) => {
   );
 };
 export default IndexPage;
-
-export const pageQuery = graphql`
-  query IndexQuery {
-    allMarkdownRemark {
-      totalCount
-    }
-  }
-`;
 ```
-
-Notice that the posts for this page are in an array passed to the template through `this.props.pathContext.group`. Index shows the current page you are on, first is whether this is the first page, last is whether this is the last page. 
-
-The query included is just to get info on the total number of posts on the site. 
