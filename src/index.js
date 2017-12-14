@@ -13,8 +13,8 @@ const filterPages = (posts, pageLength) => {
 const getPageIndex = index => (index === 0 ? "" : index + 1);
 
 const buildPaginationRoute = (index, pathPrefix) => {
-  return index > 1 ? `${pathPrefix}/${index}` : '/'
-}
+  return index > 1 ? `${pathPrefix}/${index}` : "/";
+};
 
 const isFirstPage = index => (index === 0 ? true : false);
 
@@ -33,7 +33,6 @@ const createPaginatedPages = (posts, createPage, template, pathPrefix) => {
         last: isLastPage(index, groups),
         index: index + 1,
         pageCount: groups.length
-        prefix: post
       }
     });
   });
