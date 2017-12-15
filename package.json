@@ -1,6 +1,6 @@
 {
   "name": "gatsby-paginate",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description":
     "This is a small library for paginating an array of posts within gatsby js",
   "main": "./src/index.js",
@@ -13,7 +13,6 @@
     "url": "https://github.com/pixelstew/gatsby-paginate"
   },
   "author": "Rob Gilbert",
-  "license": "ISC",
   "dependencies": {
     "path": "^0.12.7"
   }
