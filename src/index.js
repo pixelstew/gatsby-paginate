@@ -13,8 +13,8 @@ const filterPages = (posts, pageLength) => {
 const getPageIndex = index => (index === 0 ? "" : index + 1);
 
 const buildPaginationRoute = (index, pathPrefix) => {
-  return index > 1 ? `${pathPrefix}/${index}` : "/";
-};
+  return index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}`
+}
 
 const isFirstPage = index => (index === 0 ? true : false);
 
