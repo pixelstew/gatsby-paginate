@@ -15,8 +15,6 @@ npm install gatsby-paginate --save
 
 Then add the following to the top of your `gatsby-node.js` file.
 
-const createPaginatedPages = require("gatsby-paginate");
-
 ```javascript
 const createPaginatedPages = require("gatsby-paginate");
 ````
