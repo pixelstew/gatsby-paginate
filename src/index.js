@@ -21,7 +21,7 @@ const isFirstPage = index => (index === 0 ? true : false);
 const isLastPage = (index, groups) =>
   index === groups.length - 1 ? true : false;
 
-const createPaginatedPages = (posts, createPage, template, pathPrefix) => {
+const createPaginatedPages = (posts, createPage, template, pathPrefix, context) => {
   posts.forEach((group, index, groups) => {
     return createPage({
       path: buildPaginationRoute(getPageIndex(index), pathPrefix),
@@ -29,6 +29,7 @@ const createPaginatedPages = (posts, createPage, template, pathPrefix) => {
       context: {
         group,
         pathPrefix,
+        pathContext: context,
         first: isFirstPage(index),
         last: isLastPage(index, groups),
         index: index + 1,
@@ -43,13 +44,15 @@ module.exports = ({
   createPage,
   pageTemplate,
   pageLength = 10,
-  pathPrefix = ""
+  pathPrefix = "",
+  context
 }) => {
   const paginationTemplate = path.resolve(pageTemplate);
   createPaginatedPages(
     filterPages(edges, pageLength),
     createPage,
     paginationTemplate,
-    pathPrefix
+    pathPrefix,
+    context
   );
 };
