@@ -19,20 +19,25 @@ const isFirstPage = index => (index === 0 ? true : false);
 const isLastPage = (index, groups) =>
   index === groups.length - 1 ? true : false;
 
-const createPaginatedPages = (posts, createPage, template, pathPrefix, buildPath) => {
+const createPaginatedPages = (posts, createPage, template, pathPrefix, buildPath, context) => {
+  if (context.hasOwnProperty("pagination")) {
+    throw new Error("GatsbyPaginate: context has member 'pagination'");
+  }
   posts.forEach((group, index, groups) => {
     const pageIndex = getPageIndex(index)
     return createPage({
       path: typeof buildPath === 'function' ? buildPath(pageIndex, pathPrefix) : buildPaginationRoute(pageIndex, pathPrefix),
       component: template,
-      context: {
-        group,
-        pathPrefix,
-        first: isFirstPage(index),
-        last: isLastPage(index, groups),
-        index: index + 1,
-        pageCount: groups.length
-      }
+      context: Object.assign({
+        pagination: {
+          group,
+          pathPrefix,
+          first: isFirstPage(index),
+          last: isLastPage(index, groups),
+          index: index + 1,
+          pageCount: groups.length
+        }
+      }, context)
     });
   });
 };
@@ -44,6 +49,7 @@ module.exports = ({
   pageLength = 10,
   pathPrefix = "",
   buildPath = null
+  context = {}
 }) => {
   const paginationTemplate = path.resolve(pageTemplate);
   createPaginatedPages(
@@ -52,5 +58,6 @@ module.exports = ({
     paginationTemplate,
     pathPrefix,
     buildPath
+    context
   );
 };
