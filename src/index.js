@@ -28,9 +28,6 @@ const createPaginatedPages = (
   buildPath,
   context
 ) => {
-  if (context.hasOwnProperty("pagination")) {
-    throw new Error("GatsbyPaginate: context has member 'pagination'");
-  }
   posts.forEach((group, index, groups) => {
     const pageIndex = getPageIndex(index);
     return createPage({
@@ -39,19 +36,14 @@ const createPaginatedPages = (
           ? buildPath(pageIndex, pathPrefix)
           : buildPaginationRoute(pageIndex, pathPrefix),
       component: template,
-      context: Object.assign(
-        {
-          pagination: {
-            group,
-            pathPrefix,
-            first: isFirstPage(index),
-            last: isLastPage(index, groups),
-            index: index + 1,
-            pageCount: groups.length
-          }
-        },
-        context
-      )
+      context: Object.assign({
+        group,
+        pathPrefix,
+        first: isFirstPage(index),
+        last: isLastPage(index, groups),
+        index: index + 1,
+        pageCount: groups.length
+      })
     });
   });
 };
