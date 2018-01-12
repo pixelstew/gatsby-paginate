@@ -1,6 +1,6 @@
 {
   "name": "gatsby-paginate",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description":
     "This is a small library for paginating an array of posts within gatsby js",
   "main": "./src/index.js",
