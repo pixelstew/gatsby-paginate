@@ -15,11 +15,9 @@ npm install gatsby-paginate --save
 
 Then add the following to the top of your `gatsby-node.js` file.
 
+```javascript
 const createPaginatedPages = require("gatsby-paginate");
-
-````javascript
-const createPaginatedPages = require("gatsby-paginate");
-````
+```
 
 ## Use case 1 - paginate list of posts on home page<a name="eg1"></a>
 
