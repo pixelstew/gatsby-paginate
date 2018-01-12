@@ -17,7 +17,7 @@ Then add the following to the top of your `gatsby-node.js` file.
 
 ```javascript
 const createPaginatedPages = require("gatsby-paginate");
-````
+```
 
 ## Use case 1 - paginate list of posts on home page<a name="eg1"></a>
 
@@ -123,7 +123,8 @@ createPaginatedPages({
   createPage: createPage,
   pageTemplate: "src/templates/your_cool_template.js",
   pageLength: 5,
-  pathPrefix: "your_page_name"
+  pathPrefix: "your_page_name",
+  buildPath: (index, pathPrefix) => index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}` // This is optional and this is the default
 }}
 ```
 
@@ -131,6 +132,7 @@ Then...
 
 * Create a template in tha same way as above but this time
 * Add a `pathPrefix`
+* (optional) add `buildPath` if you want to have more control over the pagination URL structure
 
 In this instance a new set of pages will be created at the following path `your_site/your_page_name`
 Then a second paginated page of `your_site/your_page_name/2`
