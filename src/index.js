@@ -42,7 +42,8 @@ const createPaginatedPages = (
         first: isFirstPage(index),
         last: isLastPage(index, groups),
         index: index + 1,
-        pageCount: groups.length
+        pageCount: groups.length,
+        additionalContext: context
       })
     });
   });
