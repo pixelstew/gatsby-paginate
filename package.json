@@ -4,7 +4,7 @@
   "description":
     "This is a small library for paginating an array of posts within gatsby js",
   "main": "./src/index.js",
-  "keywords": ["gatsby"],
+  "keywords": ["gatsby", "gatsby-plugin"],
   "scripts": {
     "test": "mocha"
   },
