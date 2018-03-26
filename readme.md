@@ -125,7 +125,7 @@ createPaginatedPages({
   pageLength: 5,
   pathPrefix: "your_page_name",
   buildPath: (index, pathPrefix) => index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}` // This is optional and this is the default
-}}
+})
 ```
 
 Then...
