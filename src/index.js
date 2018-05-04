@@ -26,7 +26,8 @@ const createPaginatedPages = (
   template,
   pathPrefix,
   buildPath,
-  context
+  context,
+  layout
 ) => {
   posts.forEach((group, index, groups) => {
     const pageIndex = getPageIndex(index);
@@ -44,7 +45,8 @@ const createPaginatedPages = (
         index: index + 1,
         pageCount: groups.length,
         additionalContext: context
-      })
+      }),
+      layout
     });
   });
 };
@@ -56,7 +58,8 @@ module.exports = ({
   pageLength = 10,
   pathPrefix = "",
   buildPath = null,
-  context = {}
+  context = {},
+  layout
 }) => {
   const paginationTemplate = path.resolve(pageTemplate);
   createPaginatedPages(
@@ -65,6 +68,7 @@ module.exports = ({
     paginationTemplate,
     pathPrefix,
     buildPath,
-    context
+    context,
+    index
   );
 };
