@@ -59,7 +59,7 @@ module.exports = ({
   pathPrefix = "",
   buildPath = null,
   context = {},
-  layout
+  layout = 'index'
 }) => {
   const paginationTemplate = path.resolve(pageTemplate);
   createPaginatedPages(
@@ -69,6 +69,6 @@ module.exports = ({
     pathPrefix,
     buildPath,
     context,
-    index
+    layout
   );
 };
