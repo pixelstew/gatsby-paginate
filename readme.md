@@ -172,7 +172,7 @@ const IndexPage = ({ data, pathContext }) => {
 
   return (
     <div>
-      <h4>{pageCount} Posts</h4>
+      <h4>{pageCount} Pages</h4>
 
       {group.map(({ node }) => (
         <div key={node.id} className="blogListing">
