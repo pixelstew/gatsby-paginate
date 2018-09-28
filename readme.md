@@ -2,6 +2,8 @@
 
 This library provides a simple API for paginating an array of posts/pages for your blog/site homepage in Gatsby js.
 
+_LOOKING FOR MAINTAINERS_ - please email rob@pixelstew.co.uk with subject GATSBY_PAGINATE
+
 ## Installation
 
 ```
