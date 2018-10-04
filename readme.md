@@ -112,7 +112,7 @@ Notice that `createPaginatedPages` is being passed an options object.
 6. `context` is an optional parameter which is used as the `context` property when `createPage` is called.
 7. `layout`  is an optional parameter for passing the name of the layout for this page when `createPage` is called.
 
-`createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pathContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
+`createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pageContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
 
 ## Use case 2 - paginate a post or use pagination on a page other than index<a name="eg2"></a>
 
@@ -146,7 +146,7 @@ Then a second paginated page of `your_site/your_page_name/2`
 
 This is a simple template which might be used in [use case 1](#eg1) above to replace the index of a blog with a paginated list of posts.
 
-The `pathContext` object which contains the following 5 keys is passed to the template;
+The `pageContext` object which contains the following 5 keys is passed to the template;
 
 1. `group` - (arr) an array containing the number of edges/nodes specified in the `pageLength` option.
 1. `index` - (int) this is the index of the edge/node.
@@ -167,8 +167,8 @@ const NavLink = props => {
   }
 };
 
-const IndexPage = ({ data, pathContext }) => {
-  const { group, index, first, last, pageCount } = pathContext;
+const IndexPage = ({ data, pageContext }) => {
+  const { group, index, first, last, pageCount } = pageContext;
   const previousUrl = index - 1 == 1 ? "" : (index - 1).toString();
   const nextUrl = (index + 1).toString();
 
