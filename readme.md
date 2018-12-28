@@ -33,8 +33,8 @@ To create a paginated index of your blog posts, you need to do four things:
 You probably already have something like this in your `gatsby-node.js` file to generate the pages for your blog:
 
 ```javascript
-exports.createPages = ({ graphql, boundActionCreators }) => {
-  const { createPage } = boundActionCreators;
+exports.createPages = ({ graphql, actions }) => {
+  const { createPage } = actions;
   return new Promise((resolve, reject) => {
     graphql(`
       {
@@ -73,8 +73,8 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
 Just insert a call to `createPaginatedPages` before (or after) the createPage function:
 
 ```javascript
-exports.createPages = ({ graphql, boundActionCreators }) => {
-  const { createPage } = boundActionCreators;
+exports.createPages = ({ graphql, actions }) => {
+  const { createPage } = actions;
   return new Promise((resolve, reject) => {
     graphql(`
       //graphql query
@@ -105,7 +105,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
 Notice that `createPaginatedPages` is being passed an options object.
 
 1. `edges` is the array of nodes that comes from the GraphQL query.
-2. `createPage` is simply the `createPage` function you get from `boundActionCreators`.
+2. `createPage` is simply the `createPage` function you get from `actions`.
 3. `pageTemplate` is a template to use for the index page. And
 4. `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10.
 5. `pathPrefix` is an optional parameter for passing the name of a path to add to the path generated in the `createPage`func. This is used in [use case 2](#eg2) below.
