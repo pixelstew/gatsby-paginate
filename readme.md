@@ -79,13 +79,17 @@ exports.createPages = ({ graphql, actions }) => {
     graphql(`
       //graphql query
     `).then(result => {
+      const postsPerPage = 5
+      const { edges } = result.data.posts
       createPaginatedPages({
-        edges: result.data.posts.edges,
+        edges: edges,
         createPage: createPage,
         pageTemplate: 'src/templates/index.js',
-        pageLength: 5, // This is optional and defaults to 10 if not used
+        pageLength: postsPerPage, // This is optional and defaults to 10 if not used
         pathPrefix: '', // This is optional and defaults to an empty string if not used
-        context: {}, // This is optional and defaults to an empty object if not used
+        context: {
+          numOfPages: Math.ceil(edges.length / postsPerPage)
+        } // This is optional and defaults to an empty object if not used
       })
       result.data.posts.edges.map(({ node }) => {
         createPage({
