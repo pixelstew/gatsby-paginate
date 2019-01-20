@@ -7,7 +7,7 @@ _LOOKING FOR MAINTAINERS_ - please email rob@pixelstew.co.uk with subject GATSBY
 ## Installation
 
 ```
-npm install gatsby-paginate --save
+yarn add gatsby-paginate
 ```
 
 ## Usage
@@ -33,8 +33,7 @@ To create a paginated index of your blog posts, you need to do four things:
 You probably already have something like this in your `gatsby-node.js` file to generate the pages for your blog:
 
 ```js
-exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions
+exports.createPages = ({ graphql, actions: { createPage } }) => {
   return new Promise((resolve, reject) => {
     graphql(`
       {
@@ -73,8 +72,7 @@ exports.createPages = ({ graphql, actions }) => {
 Just insert a call to `createPaginatedPages` before (or after) the createPage function:
 
 ```js
-exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions
+exports.createPages = ({ graphql, actions: { createPage } }) => {
   return new Promise((resolve, reject) => {
     graphql(`
       //graphql query
@@ -110,7 +108,6 @@ Notice that `createPaginatedPages` is being passed an options object.
 4. `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10.
 5. `pathPrefix` is an optional parameter for passing the name of a path to add to the path generated in the `createPage`func. This is used in [use case 2](#eg2) below.
 6. `context` is an optional parameter which is used as the `context` property when `createPage` is called.
-7. `layout` is an optional parameter for passing the name of the layout for this page when `createPage` is called.
 
 `createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pageContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
 
@@ -153,7 +150,7 @@ The `pageContext` object which contains the following 5 keys is passed to the te
 1. `index` - (int) this is the index of the edge/node.
 1. `first` - (bool) **Soon to be deprecated - please calculate first using index and pageCount** - is this the first page?
 1. `last` - (bool) **Soon to be deprecated - please calculate last using index and pageCount** - is this the last page?
-1. `pageCount` - (int) the total count of items edges/nodes being paginated through
+1. `pageCount` - (int) the total number of pages being paginated through
 1. `additionalContext` - (obj) optional additional context
 
 ```jsx
