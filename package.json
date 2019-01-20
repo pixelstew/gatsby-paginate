@@ -15,5 +15,8 @@
   "author": "Rob Gilbert",
   "dependencies": {
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.1"
   }
 }
