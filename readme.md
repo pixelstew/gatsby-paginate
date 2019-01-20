@@ -12,29 +12,29 @@ npm install gatsby-paginate --save
 
 ## Usage
 
-* Require the package in your `gatsby-node.js` file.
-* Add a call to createPaginatedPages in `gatsby-node.js`.
+- Require the package in your `gatsby-node.js` file.
+- Add a call to createPaginatedPages in `gatsby-node.js`.
 
 Then add the following to the top of your `gatsby-node.js` file.
 
-```javascript
-const createPaginatedPages = require("gatsby-paginate");
+```js
+const createPaginatedPages = require('gatsby-paginate')
 ```
 
 ## Use case 1 - paginate list of posts on home page<a name="eg1"></a>
 
 To create a paginated index of your blog posts, you need to do four things:
 
-* Remove the `index.js` file from the pages directory.
-* Create an `index.js` file in the templates directory and refer to it in the createPaginatedPages call
+- Remove the `index.js` file from the pages directory.
+- Create an `index.js` file in the templates directory and refer to it in the createPaginatedPages call
 
 ### Call createPaginatedPages
 
 You probably already have something like this in your `gatsby-node.js` file to generate the pages for your blog:
 
-```javascript
+```js
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions;
+  const { createPage } = actions
   return new Promise((resolve, reject) => {
     graphql(`
       {
@@ -58,23 +58,23 @@ exports.createPages = ({ graphql, actions }) => {
       result.data.posts.edges.map(({ node }) => {
         createPage({
           path: node.fields.slug,
-          component: path.resolve("./src/templates/post.js"),
+          component: path.resolve('./src/templates/post.js'),
           context: {
-            slug: node.fields.slug
-          }
-        });
-      });
-      resolve();
-    });
-  });
-};
+            slug: node.fields.slug,
+          },
+        })
+      })
+      resolve()
+    })
+  })
+}
 ```
 
 Just insert a call to `createPaginatedPages` before (or after) the createPage function:
 
-```javascript
+```js
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions;
+  const { createPage } = actions
   return new Promise((resolve, reject) => {
     graphql(`
       //graphql query
@@ -82,24 +82,24 @@ exports.createPages = ({ graphql, actions }) => {
       createPaginatedPages({
         edges: result.data.posts.edges,
         createPage: createPage,
-        pageTemplate: "src/templates/index.js",
+        pageTemplate: 'src/templates/index.js',
         pageLength: 5, // This is optional and defaults to 10 if not used
-        pathPrefix: "", // This is optional and defaults to an empty string if not used
-        context: {} // This is optional and defaults to an empty object if not used
-      });
+        pathPrefix: '', // This is optional and defaults to an empty string if not used
+        context: {}, // This is optional and defaults to an empty object if not used
+      })
       result.data.posts.edges.map(({ node }) => {
         createPage({
           path: node.fields.slug,
-          component: path.resolve("./src/templates/post.js"),
+          component: path.resolve('./src/templates/post.js'),
           context: {
-            slug: node.fields.slug
-          }
-        });
-      });
-      resolve();
-    });
-  });
-};
+            slug: node.fields.slug,
+          },
+        })
+      })
+      resolve()
+    })
+  })
+}
 ```
 
 Notice that `createPaginatedPages` is being passed an options object.
@@ -110,7 +110,7 @@ Notice that `createPaginatedPages` is being passed an options object.
 4. `pageLength` is an optional parameter that defines how many posts to show per index page. It defaults to 10.
 5. `pathPrefix` is an optional parameter for passing the name of a path to add to the path generated in the `createPage`func. This is used in [use case 2](#eg2) below.
 6. `context` is an optional parameter which is used as the `context` property when `createPage` is called.
-7. `layout`  is an optional parameter for passing the name of the layout for this page when `createPage` is called.
+7. `layout` is an optional parameter for passing the name of the layout for this page when `createPage` is called.
 
 `createPaginatedPages` will then call `createPage` to create an index page for each of the groups of pages. The content that describes the blogs (title, slug, etc) that will go in each page will be passed to the template through `props.pageContext` so you need to make sure that everything that you want on the index page regarding the blogs should be requested in the GraphQL query in `gatsby-node.js`.
 
@@ -120,22 +120,23 @@ Notice that `createPaginatedPages` is being passed an options object.
 
 This time pass in a `pathPrefix`
 
-```javascript
+```js
 createPaginatedPages({
   edges: result.data.posts.edges,
   createPage: createPage,
-  pageTemplate: "src/templates/your_cool_template.js",
+  pageTemplate: 'src/templates/your_cool_template.js',
   pageLength: 5,
-  pathPrefix: "your_page_name",
-  buildPath: (index, pathPrefix) => index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}` // This is optional and this is the default
+  pathPrefix: 'your_page_name',
+  buildPath: (index, pathPrefix) =>
+    index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}`, // This is optional and this is the default
 })
 ```
 
 Then...
 
-* Create a template in tha same way as above but this time
-* Add a `pathPrefix`
-* (optional) add `buildPath` if you want to have more control over the pagination URL structure
+- Create a template in tha same way as above but this time
+- Add a `pathPrefix`
+- (optional) add `buildPath` if you want to have more control over the pagination URL structure
 
 In this instance a new set of pages will be created at the following path `your_site/your_page_name`
 Then a second paginated page of `your_site/your_page_name/2`
@@ -155,22 +156,22 @@ The `pageContext` object which contains the following 5 keys is passed to the te
 1. `pageCount` - (int) the total count of items edges/nodes being paginated through
 1. `additionalContext` - (obj) optional additional context
 
-```javascript
-import React, { Component } from "react";
-import Link from "gatsby-link";
+```jsx
+import React, { Component } from 'react'
+import Link from 'gatsby-link'
 
 const NavLink = props => {
   if (!props.test) {
-    return <Link to={props.url}>{props.text}</Link>;
+    return <Link to={props.url}>{props.text}</Link>
   } else {
-    return <span>{props.text}</span>;
+    return <span>{props.text}</span>
   }
-};
+}
 
 const IndexPage = ({ pageContext }) => {
-  const { group, index, first, last, pageCount } = pageContext;
-  const previousUrl = index - 1 == 1 ? "" : (index - 1).toString();
-  const nextUrl = (index + 1).toString();
+  const { group, index, first, last, pageCount } = pageContext
+  const previousUrl = index - 1 == 1 ? '' : (index - 1).toString()
+  const nextUrl = (index + 1).toString()
 
   return (
     <div>
@@ -192,7 +193,7 @@ const IndexPage = ({ pageContext }) => {
         <NavLink test={last} url={nextUrl} text="Go to Next Page" />
       </div>
     </div>
-  );
-};
-export default IndexPage;
+  )
+}
+export default IndexPage
 ```

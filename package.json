@@ -1,13 +1,13 @@
 {
   "name": "gatsby-paginate",
   "version": "1.0.16",
-  "description":
-    "This is a small library for paginating an array of posts within gatsby js",
+  "description": "This is a small library for paginating an array of posts within gatsby js",
   "main": "./src/index.js",
-  "keywords": ["gatsby", "gatsby-plugin"],
-  "scripts": {
-    "test": "mocha"
-  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "pagination"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/pixelstew/gatsby-paginate"
