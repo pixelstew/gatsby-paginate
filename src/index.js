@@ -1,24 +1,22 @@
-const path = require("path");
+const path = require(`path`)
 
-const filterPages = (posts, pageLength) => {
-  return posts
+const createGroups = (pages, pageLength) =>
+  pages
     .map((edge, index) => {
       return index % pageLength === 0
-        ? posts.slice(index, index + pageLength)
-        : null;
+        ? pages.slice(index, index + pageLength)
+        : null
     })
-    .filter(item => item);
-};
+    .filter(item => item)
 
-const getPageIndex = index => (index === 0 ? "" : index + 1);
+const getPageIndex = index => (index === 0 ? `` : index + 1)
 
 const buildPaginationRoute = (index, pathPrefix) =>
-  index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}`;
+  index > 1 ? `${pathPrefix}/${index}` : `/${pathPrefix}`
 
-const isFirstPage = index => (index === 0 ? true : false);
+const isFirstPage = index => index === 0
 
-const isLastPage = (index, groups) =>
-  index === groups.length - 1 ? true : false;
+const isLastPage = (index, length) => index === length - 1
 
 const createPaginatedPages = (
   posts,
@@ -26,14 +24,13 @@ const createPaginatedPages = (
   template,
   pathPrefix,
   buildPath,
-  context,
-  layout
+  context
 ) => {
   posts.forEach((group, index, groups) => {
-    const pageIndex = getPageIndex(index);
+    const pageIndex = getPageIndex(index)
     return createPage({
       path:
-        typeof buildPath === "function"
+        typeof buildPath === `function`
           ? buildPath(pageIndex, pathPrefix)
           : buildPaginationRoute(pageIndex, pathPrefix),
       component: template,
@@ -41,34 +38,31 @@ const createPaginatedPages = (
         group,
         pathPrefix,
         first: isFirstPage(index),
-        last: isLastPage(index, groups),
+        last: isLastPage(index, groups.length),
         index: index + 1,
         pageCount: groups.length,
-        additionalContext: context
+        additionalContext: context,
       }),
-      layout
-    });
-  });
-};
+    })
+  })
+}
 
 module.exports = ({
   edges,
   createPage,
   pageTemplate,
   pageLength = 10,
-  pathPrefix = "",
+  pathPrefix = ``,
   buildPath = null,
   context = {},
-  layout = 'index'
 }) => {
-  const paginationTemplate = path.resolve(pageTemplate);
+  const paginationTemplate = path.resolve(pageTemplate)
   createPaginatedPages(
-    filterPages(edges, pageLength),
+    createGroups(edges, pageLength),
     createPage,
     paginationTemplate,
     pathPrefix,
     buildPath,
-    context,
-    layout
-  );
-};
+    context
+  )
+}
