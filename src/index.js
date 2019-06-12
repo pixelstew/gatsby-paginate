@@ -18,51 +18,41 @@ const isFirstPage = index => index === 0
 
 const isLastPage = (index, length) => index === length - 1
 
-const createPaginatedPages = (
-  posts,
+const createPaginatedPages = ({
+  edges,
   createPage,
-  template,
-  pathPrefix,
-  buildPath,
-  context
-) => {
-  posts.forEach((group, index, groups) => {
+  pageLength = 10,
+  pageTemplate,
+  pathPrefix = ``,
+  buildPath = null,
+  context = {},
+}) => {
+  const groups = createGroups(edges, pageLength)
+  const paginationTemplate = path.resolve(pageTemplate)
+  groups.forEach((group, index, groups) => {
     const pageIndex = getPageIndex(index)
     return createPage({
       path:
         typeof buildPath === `function`
           ? buildPath(pageIndex, pathPrefix)
           : buildPaginationRoute(pageIndex, pathPrefix),
-      component: template,
-      context: Object.assign({
+      component: paginationTemplate,
+      context: {
+        ...context,
         group,
         pathPrefix,
         first: isFirstPage(index),
         last: isLastPage(index, groups.length),
         index: index + 1,
         pageCount: groups.length,
+        // additionalContext remains to avoid breaking changes but is deprecated.
+        // Starting with v1.1.0, context passed to createPaginatedPages is spread
+        // into createPage's context directly and should be used instead.
+        // Resolves https://github.com/pixelstew/gatsby-paginate/issues/29.
         additionalContext: context,
-      }),
+      },
     })
   })
 }
 
-module.exports = ({
-  edges,
-  createPage,
-  pageTemplate,
-  pageLength = 10,
-  pathPrefix = ``,
-  buildPath = null,
-  context = {},
-}) => {
-  const paginationTemplate = path.resolve(pageTemplate)
-  createPaginatedPages(
-    createGroups(edges, pageLength),
-    createPage,
-    paginationTemplate,
-    pathPrefix,
-    buildPath,
-    context
-  )
-}
+module.exports = createPaginatedPages
