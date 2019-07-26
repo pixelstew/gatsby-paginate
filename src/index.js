@@ -11,12 +11,9 @@ const createGroups = (pages, pageLength) =>
 
 const getPageIndex = index => (index === 0 ? `` : index + 1)
 
-const buildPaginationRoute = (index, pathPrefix) => {
-  if (!index && !path) {
-    return `/`
-  }
-  return index > 1 ? `${pathPrefix}/${index}` : pathPrefix
-}
+const buildPaginationRoute = (index, pathPrefix) => 
+  index > 1 ? `${pathPrefix}/${index}` : (pathPrefix || `/`)
+
 
 const isFirstPage = index => index === 0
 
